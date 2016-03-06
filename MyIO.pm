@@ -76,12 +76,12 @@ sub makeOutputDir {
 
 =head1 NAME
 
-BioIO::MyIO - package to handle opening files and passing filehandles
+MyIO - package to handle opening files and passing filehandles
 
 =head1 SYNOPSIS
 
 Creation:
-    use BioIO::MyIO;
+    use MyIO;
 
     my $infile = "test.txt";
     my $fh = getFH("<", $infile);
@@ -96,11 +96,11 @@ This module was designed to handle opening file operations and return filehandle
 
 Exports getFH subroutine by default
 
-use BioIO::MyIO;
+use MyIO;
 
 =head2 Optional Behaviors
 
-BioIO::MyIO::makeOutputDir("assignment_output");
+MyIO::makeOutputDir("assignment_output");
 
 =head1 FUNCTIONS
 

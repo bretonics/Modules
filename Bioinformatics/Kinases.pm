@@ -1,11 +1,11 @@
-package BioIO::Kinases;
+package Kinases;
 
 use warnings; use strict; use diagnostics; use feature qw(say);
 use Carp;
 
 use FindBin; use lib "$FindBin::RealBin";
 
-use BioIO::MyIO; use BioIO::Config;
+use MyIO; use Config;
 
 # =============================================================================
 #
@@ -16,7 +16,7 @@ use BioIO::MyIO; use BioIO::Config;
 # =============================================================================
 
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# $input = BioIO::Kinases->new($fileInName);
+# $input = Kinases->new($fileInName);
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # A constructor, when you build a new obj, it calls _readKinases.
 # The object has two attributes 'aoh' which stores an Array of Hashes,
@@ -25,7 +25,7 @@ use BioIO::MyIO; use BioIO::Config;
 # $return = blessed object for class
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 sub new {
-    my $filledUsage = 'Usage: BioIO::Kinases->new($file)';
+    my $filledUsage = 'Usage: Kinases->new($file)';
     @_ == 2 or croak wrongNumberArguments(), $filledUsage;
 
     my ($class, $fileInName) = @_;
@@ -177,24 +177,24 @@ sub getElementInArray {
 
 =head1 NAME
 
-BioIO::Kinanse -
+Kinanse -
 
 =head1 SYNOPSIS
 
 Creation:
-    use BioIO::Kinanse;
+    use Kinanse;
 
-    my $kinaseObj = BioIO::Kinases->new($fileInName);
+    my $kinaseObj = Kinases->new($fileInName);
 
 =head1 DESCRIPTION
 
-This module was designed as an Object Oriented program with Class 'BioIO::Kinases' in order to create a kinase object.
+This module was designed as an Object Oriented program with Class 'Kinases' in order to create a kinase object.
 
 =head1 EXPORTS
 
 =head2 Default Behaviors
 
-use BioIO::Kinanse;
+use Kinanse;
 
 =head1 METHODS
 
@@ -202,7 +202,7 @@ use BioIO::Kinanse;
 
    Arg [1]    : A file name containing kinase entries, 1 per line.
 
-   Example    : my $kinaseObj = BioIO::Kinases->new($fileInName);
+   Example    : my $kinaseObj = Kinases->new($fileInName);
 
    Description: A constructor to build a new object that calls _readKinases to
                 get an Array of Hashes for each kinase entry in file.

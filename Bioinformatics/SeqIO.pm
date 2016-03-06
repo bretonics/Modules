@@ -1,4 +1,4 @@
-package BioIO::SeqIO;
+package SeqIO;
 
 use diagnostics; use feature qw(say);
 use Carp;
@@ -7,7 +7,7 @@ use FindBin; use lib "$FindBin::RealBin";
 
 use Moose; use MooseX::StrictConstructor;
 
-use BioIO::MyIO; use BioIO::Config; use BioIO::Seq; use FinalTypes::MyTypes
+use MyIO; use Config; use Seq; use FinalTypes::MyTypes
 
 # =============================================================================
 #
@@ -144,7 +144,7 @@ sub nextSeq {
 
     if ( $numSeqs > $current ) {
         my $gi = $gis[$current]; #get gi for current sequence
-        my $seqObj = BioIO::Seq->new( gi => $gi,
+        my $seqObj = Seq->new( gi => $gi,
                                       seq => $seq{$gi},
                                       def => $def{$gi},
                                       accn => $accn{$gi} );

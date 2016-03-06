@@ -32,12 +32,12 @@ sub wrongNumberArguments {
 
 =head1 NAME
 
-BioIO::Config - package returning $BAD_NUM_ARGUMENTS when subroutine called with wrong number of arguments.
+Config - package returning $BAD_NUM_ARGUMENTS when subroutine called with wrong number of arguments.
 
 =head1 SYNOPSIS
 
 Creation:
-    use BioIO::Config
+    use Config
 
     sub getFh {
         my ($operation, $file) = @_;
@@ -59,7 +59,7 @@ This module was designed to be used as a config file returning a string warning 
 
 Exports wrongNumberArguments() subroutine by default
 
-use BioIO::Config
+use Config
 
 =head1 FUNCTIONS
 

@@ -1,4 +1,4 @@
-package BioIO::Seq;
+package Seq;
 
 use diagnostics; use feature qw(say);
 use Carp;
@@ -7,7 +7,7 @@ use FindBin; use lib "$FindBin::RealBin";
 
 use Moose; use MooseX::StrictConstructor;
 
-use BioIO::MyIO; use BioIO::Config;
+use MyIO; use Config;
 
 
 # =============================================================================
@@ -56,10 +56,10 @@ sub writeFasta {
 # $input = $seqObj->subSeq($transSTART, $transEND);
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # This method receives the beginning and the ending translation
-# sites, and returns a new BioIO::Seq object between the sites
+# sites, and returns a new Seq object between the sites
 # (inclusive, sites are bio-friendly num)#
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# $return = ($self); # new BioIO::Seq object
+# $return = ($self); # new Seq object
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 sub subSeq {
     my $filledUsage = 'Usage: my $newSeqObj = $seqObj->subSeq($transSTART, $transEND);';
@@ -75,7 +75,7 @@ sub subSeq {
     my $transLen = ($end-$start)+1;
     my $codingRegion = substr $self->seq, $start-1, $transLen; #get substring sequence
     $self->seq($codingRegion); #modify object with new substring sequence
-    return $self; #return new BioIO::Seq object
+    return $self; #return new Seq object
 }
 
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
