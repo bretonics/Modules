@@ -13,20 +13,20 @@ my $fileInName = "kinases_map_test";
 my $fileOutName = "test.txt";
 
 #-------------------------------------------------------------------------
-BEGIN { use_ok('BioIO::MyIO', qw(getFh)) }
-BEGIN { use_ok('BioIO::MyIO', qw(makeOutputDir)) }
-BEGIN { use_ok('BioIO::Config') }
-BEGIN { use_ok('BioIO::Kinases') }
+BEGIN { use_ok('MyIO', qw(getFh)) }
+BEGIN { use_ok('MyIO', qw(makeOutputDir)) }
+BEGIN { use_ok('MyConfig') }
+BEGIN { use_ok('Kinases') }
 
 
-dies_ok { my $kinaseObj = BioIO::Kinases->new() } 'dies ok when no argument is passed';
-dies_ok { my $kinaseObj = BioIO::Kinases->new($fileInName, "2") } 'dies ok when >1 arguments are passed';
-lives_ok { my $kinaseObj = BioIO::Kinases->new($fileInName) } 'lives ok when file is passed';
-my $kinaseObj = BioIO::Kinases->new($fileInName);
+dies_ok { my $kinaseObj = Kinases->new() } 'dies ok when no argument is passed';
+dies_ok { my $kinaseObj = Kinases->new($fileInName, "2") } 'dies ok when >1 arguments are passed';
+lives_ok { my $kinaseObj = Kinases->new($fileInName) } 'lives ok when file is passed';
+my $kinaseObj = Kinases->new($fileInName);
 
-dies_ok { BioIO::Kinases::_readKinases() } 'dies ok when no argument is passed';
-dies_ok { BioIO::Kinases::_readKinases($fileInName, "2") } 'dies ok when >1 arguments are passed';
-lives_ok { BioIO::Kinases::_readKinases($fileInName) } 'lives ok when file is passed';
+dies_ok { Kinases::_readKinases() } 'dies ok when no argument is passed';
+dies_ok { Kinases::_readKinases($fileInName, "2") } 'dies ok when >1 arguments are passed';
+lives_ok { Kinases::_readKinases($fileInName) } 'lives ok when file is passed';
 
 dies_ok { $kinaseObj->printKinases($fileOutName); } 'dies ok when <3 arguments are passed';
 dies_ok { $kinaseObj->printKinases($fileOutName, ['symbol','name','location'], "4" ); } 'dies ok when >3 arguments are passed';

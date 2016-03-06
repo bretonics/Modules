@@ -9,6 +9,6 @@ use Test::Exception; #need this to get dies_ok and lives_ok to work
 use FindBin; use lib "$FindBin::RealBin";
 
 
-BEGIN { use_ok('BioIO::Config', qw(wrongNumberArguments)) }
+BEGIN { use_ok('MyConfig', qw(wrongNumberArguments)) }
 dies_ok { wrongNumberArguments(1) } 'dies ok when an argument is passed';
 lives_ok { wrongNumberArguments() } 'lives ok when no argument is passed';

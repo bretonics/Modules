@@ -9,8 +9,8 @@ use Test::Exception; #need this to get dies_ok and lives_ok to work
 use FindBin; use lib "$FindBin::RealBin";
 
 
-BEGIN { use_ok('BioIO::MyIO', qw(getFh)) }
-BEGIN { use_ok('BioIO::MyIO', qw(makeOutputDir)) }
+BEGIN { use_ok('MyIO', qw(getFh)) }
+BEGIN { use_ok('MyIO', qw(makeOutputDir)) }
 
 # Create Files
 my $goodFile = "goodNt_$$";
@@ -60,10 +60,10 @@ lives_ok { getFh(">>", $goodFile) } 'lives ok on appending good file';
 
 
 # makeOutputDir
-dies_ok { BioIO::MyIO::makeOutputDir() } 'makeOutputDir dies ok when not enough arguments are given';
-dies_ok { BioIO::MyIO::makeOutputDir("TEST", "HELLO") } 'makeOutputDir dies ok when not > 1 arguments are given';
-lives_ok { BioIO::MyIO::makeOutputDir("TEST") } 'makeOutputDir lives ok when directory does not exist';
-lives_ok { BioIO::MyIO::makeOutputDir("TEST") } 'makeOutputDir lives ok when directory exists';
+dies_ok { MyIO::makeOutputDir() } 'makeOutputDir dies ok when not enough arguments are given';
+dies_ok { MyIO::makeOutputDir("TEST", "HELLO") } 'makeOutputDir dies ok when not > 1 arguments are given';
+lives_ok { MyIO::makeOutputDir("TEST") } 'makeOutputDir lives ok when directory does not exist';
+lives_ok { MyIO::makeOutputDir("TEST") } 'makeOutputDir lives ok when directory exists';
 
 # Clean Up
 unlink $goodFile;
