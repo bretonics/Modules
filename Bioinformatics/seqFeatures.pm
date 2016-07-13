@@ -5,6 +5,8 @@ use Getopt::Long; use Pod::Usage;
 
 use FindBin; use lib "$FindBin::RealBin/lib";
 
+use MyIO;
+
 use Bio::SeqIO; use Bio::SeqFeatureI;
 
 # =============================================================================
@@ -39,7 +41,35 @@ unless ($FILE){
 #-------------------------------------------------------------------------
 # VARIABLES
 my $inSeqObj = Bio::SeqIO->new('-format' => 'genbank' , -file => $FILE);
-
+my $outFile = "features.out";
+my $FH = getFH(">", $outFile);
 #-------------------------------------------------------------------------
 # CALLS
-getFeatures($inSeqObj);
+getFeatures($inSeqObj, $FH);
+
+#-------------------------------------------------------------------------
+# SUBS
+sub getFeatures {
+    my ($seqObj, $FH) = @_;
+    my (@gene, @inference, @locusTag, @product, @proteinID, @translation);
+    my @tags = qw(gene inference locus_tag product protein_id translation);
+
+    say $FH join("\t", @tags); #print file header
+    for my $feat ($seqObj->next_seq->get_SeqFeatures) {
+        my $primaryTag = $feat->primary_tag;
+        if ($primaryTag eq 'CDS') {
+            for my $tag (@tags) {
+                $feat->has_tag($tag) ? print $FH $feat->get_tag_values($tag), "\t" : print $FH " \t" ;
+            }
+            print $FH "\n"; #new line for each CDS
+
+            # say "\nPrimary tag: $primaryTag at ", $feat->start;
+            # for my $tag ($feat->get_all_tags) {
+            #     # print 'Tag: ', $tag, " --- ";
+            #     for my $value ($feat->get_tag_values($tag)) {
+            #         say 'Value: ', $value;
+            #     }
+            # }
+        }
+     }
+}
