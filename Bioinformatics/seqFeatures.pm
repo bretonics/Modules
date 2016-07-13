@@ -11,18 +11,18 @@ use Bio::SeqIO; use Bio::SeqFeatureI;
 
 # =============================================================================
 #
-#   CAPITAN:
-#   FILE:
+#   CAPITAN: Andres Breton
+#   FILE: seqFeatures.pl
 #   LICENSE:
-#   USAGE:
-#   DEPENDENCIES:
+#   USAGE: Print Genbank file features for each CDS to file
+#   DEPENDENCIES: BioPerl modules
 #
 # =============================================================================
 
 
 #-------------------------------------------------------------------------
 # COMMAND LINE
-my $FILE;
+my @FILES;
 my $usage= "\n\n$0 [options]\n
 Options:
     -f      File
@@ -31,45 +31,43 @@ Options:
 ";
 # OPTIONS
 GetOptions(
-    'f=s'   =>\$FILE,
+    'f=s{1,}'   =>\@FILES,
     help    =>sub{pod2usage($usage);}
 )or pod2usage(2);
 # CHECKS
-unless ($FILE){
-    die "Did not provide an input file, -f <infile.txt>", $usage;
+unless (@FILES){
+    die "Did not provide an input file(s), -f <infile.txt>", $usage;
 }
 #-------------------------------------------------------------------------
 # VARIABLES
-my $inSeqObj = Bio::SeqIO->new('-format' => 'genbank' , -file => $FILE);
-my $outFile = "features.out";
-my $FH = getFH(">", $outFile);
+
 #-------------------------------------------------------------------------
 # CALLS
-getFeatures($inSeqObj, $FH);
+getFeatures(@FILES);
 
 #-------------------------------------------------------------------------
 # SUBS
 sub getFeatures {
-    my ($seqObj, $FH) = @_;
-    my (@gene, @inference, @locusTag, @product, @proteinID, @translation);
+    my (@files) = @_;
+    # my (@gene, @inference, @locusTag, @product, @proteinID, @translation);
     my @tags = qw(gene inference locus_tag product protein_id translation);
 
-    say $FH join("\t", @tags); #print file header
-    for my $feat ($seqObj->next_seq->get_SeqFeatures) {
-        my $primaryTag = $feat->primary_tag;
-        if ($primaryTag eq 'CDS') {
-            for my $tag (@tags) {
-                $feat->has_tag($tag) ? print $FH $feat->get_tag_values($tag), "\t" : print $FH " \t" ;
-            }
-            print $FH "\n"; #new line for each CDS
 
-            # say "\nPrimary tag: $primaryTag at ", $feat->start;
-            # for my $tag ($feat->get_all_tags) {
-            #     # print 'Tag: ', $tag, " --- ";
-            #     for my $value ($feat->get_tag_values($tag)) {
-            #         say 'Value: ', $value;
-            #     }
-            # }
-        }
+    for my $file (@files) {
+        my $inSeqObj = Bio::SeqIO->new('-format' => 'genbank' , -file => $file);
+        $file =~ /(.+\/)?(.+)\..+/; my $outFile = $2 . ".features";
+        my $FH = getFH(">", $outFile);
+        say $FH join("\t", @tags); #print file header
+
+        for my $feat ($inSeqObj->next_seq->get_SeqFeatures) {
+            my $primaryTag = $feat->primary_tag;
+            if ($primaryTag eq 'CDS') {
+                for my $tag (@tags) {
+                    $feat->has_tag($tag) ? print $FH $feat->get_tag_values($tag), "\t" : print $FH " \t" ;
+                }
+                print $FH "\n"; #new line for each CDS
+            }
+         }
      }
 }
+
