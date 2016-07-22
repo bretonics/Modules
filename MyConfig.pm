@@ -32,12 +32,12 @@ sub wrongNumberArguments {
 
 =head1 NAME
 
-Config - package returning $BAD_NUM_ARGUMENTS when subroutine called with wrong number of arguments.
+MyConfig - package returning $BAD_NUM_ARGUMENTS when subroutine called with wrong number of arguments.
 
 =head1 SYNOPSIS
 
 Creation:
-    use Config
+    use MyConfig;
 
     sub getFh {
         my ($operation, $file) = @_;
@@ -59,7 +59,7 @@ This module was designed to be used as a config file returning a string warning 
 
 Exports wrongNumberArguments() subroutine by default
 
-use Config
+use MyConfig;
 
 =head1 FUNCTIONS
 
@@ -80,7 +80,7 @@ use Config
 
 =head1 COPYRIGHT AND LICENSE
 
-Andres Breton 2015
+Andres Breton 2016
 
 GNU V2
 The licenses for most software are designed to take away your
@@ -95,7 +95,7 @@ your programs, too.
 
 =head1 CONTACT
 
-Please email comments or questions to Andres Breton breton.a@husky.neu.edu
+Please email comments or questions to Andres Breton me@andresbreton.com
 
 =head1 SETTING PATH
 
