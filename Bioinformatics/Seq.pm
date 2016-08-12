@@ -8,16 +8,16 @@ our @EXPORT_OK = qw(); #functions for explicit export
 use strict; use warnings; use diagnostics; use feature qw(say);
 use Carp;
 
-use Config;
+use MyConfig;
 
 use Bio::SeqIO;
 
 # ==============================================================================
 #
-#   CAPITAN:Andres Breton
-#   FILE: Seq.pm
-#   USAGE: Manipulate sequences
-#   DEPENDENCIES: BioPerl
+#   CAPITAN:        Andres Breton
+#   FILE:           Seq.pm
+#   USAGE:          Manipulate sequences
+#   DEPENDENCIES:   - BioPerl modules
 #
 # ==============================================================================
 
@@ -95,6 +95,7 @@ This finds and uses subdirectory 'lib' in current directoy as library location
 
 =cut
 # ==============================================================================
+
 #-------------------------------------------------------------------------------
 # SUBS
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
