@@ -86,7 +86,39 @@ sub mkDir {
 
 =cut
 
-sub textOut {
-
+sub message {
+    my %colors {
+        'red' => {
+                'regular'   => "\e[0;31m",
+                'bold'      => "\e[1;31m",
+                },
+        'green' => {
+                'regular'   => "\e[0;32m",
+                'bold'      => "\e[1;32m",
+                },
+        'yellow' => {
+                'regular'   => "\e[0;33m",
+                'bold'      => "\e[1;33m",
+                },
+        'blue' => {
+                'regular'   => "\e[0;34m",
+                'bold'      => "\e[1;34m",
+                },
+        'purple' => {
+                'regular'   => "\e[0;35m",
+                'bold'      => "\e[1;35m",
+                },
+        'cyan' => {
+                'regular'   => "\e[0;36m",
+                'bold'      => "\e[1;36m",
+                },
+        'white' => {
+                'regular'   => "\e[0;37m",
+                'bold'      => "\e[1;37m",
+                },
+        'reset'             => "\e[0m"
+            
+    };
+    
 	return;
 }
