@@ -13,14 +13,50 @@ use MyConfig;
 
 # =============================================
 #
-# 	MASTERED BY: Andres Breton
-#	FILE: database.pm
+# 	CAPITAN:     Andres Breton, http://andresbreton.com
+#	FILE:        Databases.pm
 #
 # =============================================
 
+=head1 NAME
+
+Databases - package to handle database connections
+
+=head1 SYNOPSIS
+
+Creation:
+    use Databases;
+
+=head1 DESCRIPTION
+
+
+=head1 EXPORTS
+
+=head2 Default Behaviors
+
+Exports startMongoDB, insertData, updateData, readData, removeData subroutines by default
+
+use Databases;
+
+=head1 FUNCTIONS
+
+=cut
+
 my @dataFields = qw(_id accession sequence version locus organism seqLength gene proteinID translation);
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#-------------------------------------------------------------------------------
 # MAIN
+
+=head2 startMongoDB
+
+    Example     : $PID = startMongoDB($MONGODB, $outDir);
+
+    Description : Start Mongo database service and return process ID
+
+    Returntype  : Scalar
+
+    Status      : Stable
+
+=cut
 sub startMongoDB {
     my $filledUsage = 'Usage: ' . (caller(0))[3] . '($MONGODB, $outDir)';
     @_ == 2 or croak wrongNumberArguments(), $filledUsage;
@@ -61,6 +97,17 @@ sub startMongoDB {
     }
 }
 
+=head2 insertData
+
+    Example     : insertData($MONGODB, $COLLECTION, $id, $gi, $accession, $version, $locus, $organism, $sequence, $seqLen, $gene, $proteinID, $translation)
+
+    Description : Insert document record in Mongo database
+
+    Returntype  : Scalar List
+
+    Status      : Stable
+
+=cut
 sub insertData {
     my $filledUsage = 'Usage: ' . (caller(0))[3] . '($MONGODB, $COLLECTION, $id, $gi, $accession, $version, $locus, $organism, $sequence, $seqLen, $gene, $proteinID, $translation)';
     @_ == 13 or croak wrongNumberArguments(), $filledUsage;
@@ -82,6 +129,17 @@ sub insertData {
                         })
 }
 
+=head2 updateData
+
+    Example     : updateData($field, $value, $MONGODB, $COLLECTION);
+
+    Description : Update document record in Mongo database
+
+    Returntype  : Scalar List
+
+    Status      : Stable
+
+=cut
 sub updateData {
     my $filledUsage = 'Usage: ' . (caller(0))[3] . '($field, $value, $MONGODB, $COLLECTION)';
     @_ == 4 or croak wrongNumberArguments(), $filledUsage;
@@ -98,6 +156,17 @@ sub updateData {
     say "Document $value updated. $fieldUpdate field changed to $newValue.";
 }
 
+=head2 readData
+
+    Example     : readData($field, $value, $MONGODB, $COLLECTION);
+
+    Description : Read document record in Mongo database
+
+    Returntype  : Scalar List
+
+    Status      : Stable
+
+=cut
 sub readData {
     my $filledUsage = 'Usage: ' . (caller(0))[3] . '($field, $value, $MONGODB, $COLLECTION)';
     @_ == 4 or croak wrongNumberArguments(), $filledUsage;
@@ -114,6 +183,17 @@ sub readData {
     }
 }
 
+=head2 removeData
+
+    Example     : removeData($field, $value, $MONGODB, $COLLECTION);
+
+    Description : Remove document record in Mongo database
+
+    Returntype  : Scalar List
+
+    Status      : Stable
+
+=cut
 sub removeData {
     my $filledUsage = 'Usage: ' . (caller(0))[3] . '($field, $value, $MONGODB, $COLLECTION)';
     @_ == 4 or croak wrongNumberArguments(), $filledUsage;
@@ -123,8 +203,22 @@ sub removeData {
     my $collectionObj = databaseConnection($MONGODB, $COLLECTION);
     $collectionObj->remove({$field => $value});
 }
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#-------------------------------------------------------------------------------
 # HELPERS
+
+=head2 databaseConnection
+
+    Arg [1]     : No arguments
+
+    Example     : databaseConnection($MONGODB, $COLLECTION)
+
+    Description : Start connection to Mongo database server
+
+    Returntype  : Scalar List
+
+    Status      : Stable
+
+=cut
 sub databaseConnection {
     my $filledUsage = 'Usage: ' . (caller(0))[3] . '($MONGODB, $COLLECTION)';
     @_ == 2 or croak wrongNumberArguments(), $filledUsage;
@@ -135,4 +229,26 @@ sub databaseConnection {
     my $collectionObj = $db->get_collection($COLLECTION); #get collection
     return $collectionObj;
 }
+
+
+=head1 COPYRIGHT AND LICENSE
+
+Andres Breton (C) 2016
+
+[LICENSE]
+
+=head1 CONTACT
+
+Please email comments or questions to Andres Breton, me@andresbreton.com
+
+=head1 SETTING PATH
+
+If PERL5LIB was not set, do something like this:
+
+use FindBin; use lib "$FindBin::RealBin/lib";
+
+This finds and uses subdirectory 'lib' in current directoy as library location
+
+=cut
+
 1;
