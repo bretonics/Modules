@@ -74,20 +74,20 @@ sub mkDir {
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 =head2 textOut
 
-    Arg [1]     : 
+    Arg [1]     :
 
-    Example     : 
+    Example     :
 
-    Description : 
+    Description :
 
-    Returntype  : 
+    Returntype  :
 
     Status      : Development
 
 =cut
 
 sub message {
-    my %colors {
+    my %colors = (
         'red' => {
                 'regular'   => "\e[0;31m",
                 'bold'      => "\e[1;31m",
@@ -117,8 +117,8 @@ sub message {
                 'bold'      => "\e[1;37m",
                 },
         'reset'             => "\e[0m"
-            
-    };
-    
+    );
+
 	return;
 }
+1;
