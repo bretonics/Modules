@@ -2,8 +2,8 @@ package MyIO;
 
 use Exporter qw(import);
 our @ISA = qw(Exporter);
-our @EXPORT = qw(getFH); #functions to export
-our @EXPORT_OK = qw(makeOutputDir); #functions to export
+our @EXPORT = qw(getFH mkDir); #functions to export
+our @EXPORT_OK = qw(); #functions to export
 
 use warnings; use strict; use diagnostics; use feature qw(say);
 use Carp;
@@ -60,15 +60,17 @@ sub getFH {
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # $output = Directory in filesystem
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-sub makeOutputDir {
+sub mkDir {
     my ($outDir) = @_;
     my $filledUsage = 'Usage: ' . (caller(0))[3] . '($outDir)';
     @_ == 1 or croak wrongNumberArguments(), $filledUsage;
+    
     if (!-e $outDir) {
         mkdir $outDir;
     } else {
-        carp "Directory '$outDir' already exists.";
+        warn "Directory '$outDir' already exists.";
     }
+    return $outDir;
 }
 
 1;
@@ -100,7 +102,7 @@ use MyIO;
 
 =head2 Optional Behaviors
 
-MyIO::makeOutputDir("assignment_output");
+MyIO::mkDir("DirName");
 
 =head1 FUNCTIONS
 
@@ -117,11 +119,11 @@ MyIO::makeOutputDir("assignment_output");
 
    Status     : Stable
 
-=head2 makeOutputDir
+=head2 mkDir
 
   Arg [1]    : A directory name that needs to be created
 
-  Example    : makeOutputDir("assignment_output");
+  Example    : mkDir("assignment_output");
 
   Description: This function will make the directory passed if it does not exist if you have privileges
 
