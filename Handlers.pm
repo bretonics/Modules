@@ -2,7 +2,7 @@ package Handlers;
 
 use Exporter qw(import);
 our @ISA = qw(Exporter);
-our @EXPORT = qw(mkDir); #functions exported by default
+our @EXPORT = qw(); #functions exported by default
 our @EXPORT_OK = qw(); #functions for explicit export
 
 use strict; use warnings; use diagnostics; use feature qw(say);
@@ -21,7 +21,7 @@ use MyConfig;
 
 =head1 NAME
 
-Handlers - package handler for outputs
+Handlers - package to handle outputs
 
 =head1 SYNOPSIS
 
@@ -49,27 +49,6 @@ Handlers::;
 
 #-------------------------------------------------------------------------------
 # MAIN
-
-#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-=head2 mkDir
-
-    Arg [1]     : Name of output directory desired
-
-    Example     : mkDir("Data");
-
-    Description : Create directory unless already present
-
-    Returntype  : NULL
-
-    Status      : Stable
-
-=cut
-
-sub mkDir {
-	my ($outDir) = @_;
-	`mkdir $outDir` unless(-e $outDir);
-	return;
-}
 
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 =head2 textOut
