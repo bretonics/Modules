@@ -14,9 +14,9 @@ use MyConfig;
 
 # =============================================================================
 #
-#   CAPITAN: Andres Breton
-#   FILE: MyIO.pm
-#   USAGE: File IO package
+#   CAPITAN:    Andres Breton
+#   FILE:       MyIO.pm
+#   USAGE:      File IO package
 #
 # =============================================================================
 
