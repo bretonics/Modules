@@ -51,22 +51,22 @@ Handlers::;
 # MAIN
 
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-=head2 textOut
+=head2 message
 
-    Arg [1]     : 
+    Arg [1]     :
 
-    Example     : 
+    Example     :
 
-    Description : 
+    Description : Return text message with color output
 
-    Returntype  : 
+    Returntype  :
 
     Status      : Development
 
 =cut
 
 sub message {
-    my %colors {
+    my %colors = (
         'red' => {
                 'regular'   => "\e[0;31m",
                 'bold'      => "\e[1;31m",
@@ -96,8 +96,8 @@ sub message {
                 'bold'      => "\e[1;37m",
                 },
         'reset'             => "\e[0m"
-            
-    };
-    
+    );
+
 	return;
 }
+1;
