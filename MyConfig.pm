@@ -12,9 +12,9 @@ use Readonly;
 
 # =============================================================================
 #
-#   CAPITAN: Andres Breton
-#   FILE: MyConfig.pm
-#   USAGE: Configuration module
+#   CAPITAN:    Andres Breton
+#   FILE:       MyConfig.pm
+#   USAGE:      Configuration module
 #
 # =============================================================================
 
@@ -39,7 +39,7 @@ MyConfig - package returning $BAD_NUM_ARGUMENTS when subroutine called with wron
 Creation:
     use MyConfig;
 
-    sub getFh {
+    sub getFH {
         my ($operation, $file) = @_;
 
         my $filledUsage = 'Usage: ' . (caller(0))[3] . '($operation, $file)';
