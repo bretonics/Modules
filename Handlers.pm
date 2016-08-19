@@ -51,28 +51,7 @@ Handlers::;
 # MAIN
 
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-=head2 mkDir
-
-    Arg [1]     : Name of output directory desired
-
-    Example     : mkDir("Data");
-
-    Description : Create directory unless already present
-
-    Returntype  : NULL
-
-    Status      : Stable
-
-=cut
-
-sub mkDir {
-	my ($outDir) = @_;
-	`mkdir $outDir` unless(-e $outDir);
-	return;
-}
-
-#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-=head2 textOut
+=head2 message
 
     Arg [1]     :
 
