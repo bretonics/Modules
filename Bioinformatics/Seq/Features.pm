@@ -76,11 +76,7 @@ sub _saveFeatures {
 
     if ($primaryTag eq 'CDS') {
       my $strand = $feat->strand;
-      if ($strand == 1) {
-        $strand = '+';
-      } else {
-        $strand = '-';
-      }
+      $strand == 1 ? $strand = '+' : $strand = '-';
       print $FH "$strain\t$strand\t";
 
       for my $tag (@tags) {
