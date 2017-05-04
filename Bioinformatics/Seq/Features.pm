@@ -1,8 +1,8 @@
-package seqFeatures;
+package Features;
 
 use Exporter qw(import);
 our @ISA = qw(Exporter);
-our @EXPORT = qw(parseHeader parseFeatures); #functions exported by default
+our @EXPORT = qw(getFeatures printFeatures); #functions exported by default
 
 use warnings; use strict; use diagnostics; use feature qw(say);
 use Carp;
@@ -15,8 +15,8 @@ use MyIO;
 # =============================================================================
 #
 #   CAPITAN:        Andres Breton, http://andresbreton.com
-#   FILE:           seqFeatures.pm
-#   LICENSE:        
+#   FILE:           Features.pm
+#   LICENSE:
 #   USAGE:          Print Genbank file features for each CDS to file
 #   DEPENDENCIES:   - BioPerl modules
 #                   - Own Modules repo
@@ -24,71 +24,88 @@ use MyIO;
 # =============================================================================
 
 
-sub lookUpFeatures {
-    my (@seqObjects) = @_;
-    my $arraySize = @seqObjects;
-    for(my $i=0; $i<$arraySize;$i++) {  #loop through seqObjects passed
-        for my $feat ($seqObjects[$i]->get_SeqFeatures) {   #gets seqObject features
-            # Get Protein ID and Translation
-            if ($feat->primary_tag eq "CDS") {
-                getFeatures($feat, $feat->primary_tag);
-            }
-            # Get Exon
-            if ($feat->primary_tag eq "exon") {
-                getFeatures($feat, $feat->primary_tag);
-            }
-            }
-
-        }
+sub getFeatures {
+  my (@seqObjects) = @_;
+  my $numObjs = @seqObjects;
+  for(my $i=0; $i < $numObjs; $i++) {  # loop through seqObjects passed
+    for my $feat ($seqObjects[$i]->get_SeqFeatures) { # gets seqObject features
+      # Get Protein ID and Translation
+      if ($feat->primary_tag eq 'CDS') {
+        _printFeatures($feat);
+      }
+      # Get Exon
+      if ($feat->primary_tag eq 'exon') {
+        _printFeatures($feat);
+      }
     }
+  }
 }
 
 
-sub getFeatures {
-    my ($feat, $primaryTag) = @_;
-    print "\nPrimary Tag: ", $feat->primary_tag, " start: ", $feat->start, " ends: ", $feat->end, " strand: ", $feat->strand,"\n";
-    for my $tag ($feat->get_all_tags) { #gets seqObject tags from primary feature
-        print " tag: ", $tag, "\n";
-        for my $value ($feat->get_tag_values($tag)) { #gets seq object values from tag
-            print "  value: ", $value, "\n";
-        }
-    }
+sub printFeatures {
+  my (@files) = @_;
+  my @tags = qw(gene inference start end product protein_id translation);
 
+  for my $file (@files) {
+    my $inSeq   = Bio::SeqIO->new( -format => 'genbank' , -file => $file );
+    my $seqObj  = $inSeq->next_seq;
+    my $strain  = $seqObj->display_id;
+
+    $file =~ /(.+\/)?(.+)\..+/;
+    my $outFile = $2 . '.features';
+    my $FH      = getFH('>', $outFile);
+
+    say $FH join("\t", 'strain', 'strand', @tags); # print file header
+
+    for my $feat ($seqObj->get_SeqFeatures) {
+      my $primaryTag = $feat->primary_tag;
+
+      if ($primaryTag eq 'CDS') {
+        my $strand = $feat->strand();
+        if ($strand == 1) {
+          $strand = '+';
+        } else {
+          $strand = '-';
+        }
+        print $FH "$strain\t$strand\t";
+
+        for my $tag (@tags) {
+          if ($tag eq 'start') {
+            print $FH $feat->start(), "\t";
+          } elsif ($tag eq 'end') {
+            print $FH $feat->end(), "\t";
+          } else {
+            $feat->has_tag($tag) ? print $FH $feat->get_tag_values($tag), "\t" : print $FH " \t" ;
+          }
+        }
+        print $FH "\n"; # new line for each CDS
+      }
+    }
+  }
 }
 
-sub getFeatures {
-    my (@files) = @_;
-    # my (@gene, @inference, @locusTag, @product, @proteinID, @translation);
-    my @tags = qw(gene inference locus_tag product protein_id translation);
 
+sub _lookUpFeatures {
+  my ($feat) = @_;
+  say "\nPrimary Tag: ", $feat->primary_tag, " start: ", $feat->start, " ends: ", $feat->end, " strand: ", $feat->strand;
 
-    for my $file (@files) {
-        my $inSeqObj = Bio::SeqIO->new('-format' => 'genbank' , -file => $file);
-        $file =~ /(.+\/)?(.+)\..+/; my $outFile = $2 . ".features";
-        my $FH = getFH(">", $outFile);
-        say $FH join("\t", @tags); #print file header
-
-        for my $feat ($inSeqObj->next_seq->get_SeqFeatures) {
-            my $primaryTag = $feat->primary_tag;
-            if ($primaryTag eq 'CDS') {
-                for my $tag (@tags) {
-                    $feat->has_tag($tag) ? print $FH $feat->get_tag_values($tag), "\t" : print $FH " \t" ;
-                }
-                print $FH "\n"; #new line for each CDS
-            }
-         }
-     }
+  for my $tag ($feat->get_all_tags) { # gets seqObject tags from primary feature
+    say "\ttag: $tag";
+    for my $value ( $feat->get_tag_values($tag) ) { # gets seq object values from tag
+      say "\tvalue: $value";
+    }
+  }
 }
 
 =head1 COPYRIGHT AND LICENSE
 
-Andres Breton (C) 2016
+Andres Breton (C)
 
 [LICENSE]
 
 =head1 CONTACT
 
-Please email comments or questions to Andres Breton, me@andresbreton.com
+Please email comments or questions to Andres Breton, <dev@andresbreton.com>
 
 =head1 SETTING PATH
 
@@ -96,7 +113,7 @@ If PERL5LIB was not set, do something like this:
 
 use FindBin; use lib "$FindBin::RealBin/lib";
 
-This finds and uses subdirectory 'lib' in current directoy as library location
+This finds and uses subdirectory 'lib' in current directory as library location
 
 =cut
 
