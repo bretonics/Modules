@@ -17,7 +17,7 @@ use MyIO;
 #   CAPITAN:        Andres Breton, http://andresbreton.com
 #   FILE:           Features.pm
 #   LICENSE:
-#   USAGE:          Print Genbank file features for each CDS to file
+#   USAGE:          Save/Print Genbank file features for each CDS to file/stdout
 #   DEPENDENCIES:   - BioPerl modules
 #                   - Own Modules repo
 #
@@ -27,63 +27,78 @@ use MyIO;
 # Gets features provided a sequence file
 sub getFeatures {
   my (@files) = @_;
-  my @tags = qw(gene inference start end product protein_id translation);
-
   for my $file (@files) {
     my $inSeq   = Bio::SeqIO->new( -format => 'genbank' , -file => $file );
     my $seqObj  = $inSeq->next_seq;
-    my $strain  = $seqObj->display_id;
-
-    $file =~ /(.+\/)?(.+)\..+/;
-    my $outFile = $2 . '.features';
-    my $FH      = getFH('>', $outFile);
-
-    say $FH join("\t", 'strain', 'strand', @tags); # print file header
-
-    for my $feat ($seqObj->get_SeqFeatures) {
-      my $primaryTag = $feat->primary_tag;
-
-      if ($primaryTag eq 'CDS') {
-        my $strand = $feat->strand();
-        if ($strand == 1) {
-          $strand = '+';
-        } else {
-          $strand = '-';
-        }
-        print $FH "$strain\t$strand\t";
-
-        for my $tag (@tags) {
-          if ($tag eq 'start') {
-            print $FH $feat->start(), "\t";
-          } elsif ($tag eq 'end') {
-            print $FH $feat->end(), "\t";
-          } else {
-            $feat->has_tag($tag) ? print $FH $feat->get_tag_values($tag), "\t" : print $FH " \t" ;
-          }
-        }
-        print $FH "\n"; # new line for each CDS
-      }
-    }
-    close $FH;
+    _saveFeatures($seqObj)
   }
 }
 
 
 # Gets features provided a sequence object
 sub lookUpFeatures {
-  my (@seqObjects, $task) = @_;
+  my ($seqObjects, $task) = @_;
+  my @seqObjects  = @$seqObjects;
   my $numObjs = @seqObjects;
+
   for(my $i=0; $i < $numObjs; $i++) {  # loop through seqObjects passed
+
+    _saveFeatures($seqObjects[$i]) and next if($task eq 'save');
+
     for my $feat ($seqObjects[$i]->get_SeqFeatures) { # gets seqObject features
-      # Get Protein ID and Translation
+      # Get Coding Sequence (CDS)
       if ($feat->primary_tag eq 'CDS') {
-        _printFeatures($feat);
+        if ($task eq 'print') {
+          _printFeatures($feat);
+        } else {
+          # TODO:intended to return a data structure with all features
+          return;
+        }
       }
     }
   }
 }
 
 
+# Save features to file
+sub _saveFeatures {
+  my ($seqObj) = @_;
+  my @tags = qw(gene inference start end product protein_id translation);
+  my $strain  = $seqObj->display_id;
+  my $outFile = 'features_' . $strain . '.txt';
+  # $file =~ /(.+\/)?(.+)\..+/;
+  my $FH      = getFH('>', $outFile);
+
+  say $FH join("\t", 'strain', 'strand', @tags); # print file header
+
+  for my $feat ($seqObj->get_SeqFeatures) {
+    my $primaryTag = $feat->primary_tag;
+
+    if ($primaryTag eq 'CDS') {
+      my $strand = $feat->strand;
+      if ($strand == 1) {
+        $strand = '+';
+      } else {
+        $strand = '-';
+      }
+      print $FH "$strain\t$strand\t";
+
+      for my $tag (@tags) {
+        if ($tag eq 'start') {
+          print $FH $feat->start, "\t";
+        } elsif ($tag eq 'end') {
+          print $FH $feat->end, "\t";
+        } else {
+          $feat->has_tag($tag) ? print $FH $feat->get_tag_values($tag), "\t" : print $FH " \t" ;
+        }
+      }
+      print $FH "\n"; # new line for each CDS
+    }
+  }
+}
+
+
+# Print features to STDOUT
 sub _printFeatures {
   my ($feat) = @_;
   say "\nPrimary Tag: ", $feat->primary_tag, " start: ", $feat->start, " ends: ", $feat->end, " strand: ", $feat->strand;
