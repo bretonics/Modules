@@ -1,8 +1,8 @@
-package Features;
+package Bioinformatics::Seq::Features;
 
 use Exporter qw(import);
 our @ISA = qw(Exporter);
-our @EXPORT = qw(getFeatures printFeatures); #functions exported by default
+our @EXPORT = qw(getFeatures lookUpFeatures);
 
 use warnings; use strict; use diagnostics; use feature qw(say);
 use Carp;
@@ -24,25 +24,8 @@ use MyIO;
 # =============================================================================
 
 
+# Gets features provided a sequence file
 sub getFeatures {
-  my (@seqObjects) = @_;
-  my $numObjs = @seqObjects;
-  for(my $i=0; $i < $numObjs; $i++) {  # loop through seqObjects passed
-    for my $feat ($seqObjects[$i]->get_SeqFeatures) { # gets seqObject features
-      # Get Protein ID and Translation
-      if ($feat->primary_tag eq 'CDS') {
-        _printFeatures($feat);
-      }
-      # Get Exon
-      if ($feat->primary_tag eq 'exon') {
-        _printFeatures($feat);
-      }
-    }
-  }
-}
-
-
-sub printFeatures {
   my (@files) = @_;
   my @tags = qw(gene inference start end product protein_id translation);
 
@@ -81,11 +64,27 @@ sub printFeatures {
         print $FH "\n"; # new line for each CDS
       }
     }
+    close $FH;
   }
 }
 
 
-sub _lookUpFeatures {
+# Gets features provided a sequence object
+sub lookUpFeatures {
+  my (@seqObjects, $task) = @_;
+  my $numObjs = @seqObjects;
+  for(my $i=0; $i < $numObjs; $i++) {  # loop through seqObjects passed
+    for my $feat ($seqObjects[$i]->get_SeqFeatures) { # gets seqObject features
+      # Get Protein ID and Translation
+      if ($feat->primary_tag eq 'CDS') {
+        _printFeatures($feat);
+      }
+    }
+  }
+}
+
+
+sub _printFeatures {
   my ($feat) = @_;
   say "\nPrimary Tag: ", $feat->primary_tag, " start: ", $feat->start, " ends: ", $feat->end, " strand: ", $feat->strand;
 
