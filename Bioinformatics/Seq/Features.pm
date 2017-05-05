@@ -105,9 +105,11 @@ sub lookUpFeatures {
 # Save features to file
 sub _saveFeatures {
   my ($seqObj) = @_;
-  my @tags = qw(gene inference start end product protein_id translation);
-  my $strain  = $seqObj->display_id;
-  my $outFile = 'features_' . $strain . '.txt';
+  my @tags      = qw(gene locus_tag inference start end product protein_id translation);
+  my $strain    = $seqObj->display_id;
+  my $seq       = $seqObj->seq;
+  my $molecule  = $seqObj->molecule;
+  my $outFile   = 'features_' . $strain . '.txt';
   # $file =~ /(.+\/)?(.+)\..+/;
   my $FH      = getFH('>', $outFile);
 
@@ -130,6 +132,9 @@ sub _saveFeatures {
           $feat->has_tag($tag) ? print $FH $feat->get_tag_values($tag), "\t" : print $FH " \t" ;
         }
       }
+      # Handle translation if not protein file
+      my $translation = _translate() if($molecule eq 'PRT');
+      print $FH $translation;
       print $FH "\n"; # new line for each CDS
     }
   }
@@ -147,6 +152,12 @@ sub _printFeatures {
     }
   }
 }
+
+sub _translate {
+  my ($seq) = @_;
+  say($seq->translate($seq));
+}
+
 
 =head1 COPYRIGHT AND LICENSE
 
