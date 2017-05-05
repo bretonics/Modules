@@ -23,8 +23,39 @@ use MyIO;
 #
 # =============================================================================
 
+=head1 NAME
 
-# Gets features provided a sequence file
+Features - package to deal with sequence file features.
+
+=head1 SYNOPSIS
+
+use Bioinformatics::Seq::Features;
+
+=head1 DESCRIPTION
+
+This module was designed to save or print Genbank file features for each CDS to a file or stdout.
+
+=head1 EXPORTS
+
+=head2 Default Behaviors
+
+use Bioinformatics::Seq::Features;
+
+=head1 METHODS
+
+=head2 getFeatures
+
+  Arg [1]     :
+
+  Example     :
+
+  Description : Gets features provided a sequence fileS
+
+  Returntype  :
+
+  Status      : Stable
+
+=cut
 sub getFeatures {
   my (@files) = @_;
   for my $file (@files) {
@@ -34,8 +65,19 @@ sub getFeatures {
   }
 }
 
+=head2 lookUpFeatures
 
-# Gets features provided a sequence object
+  Arg [1]     :
+
+  Example     :
+
+  Description : Gets features provided a sequence object
+
+  Returntype  :
+
+  Status      : Stable
+
+=cut
 sub lookUpFeatures {
   my ($seqObjects, $task) = @_;
   my @seqObjects  = @$seqObjects;
@@ -93,7 +135,6 @@ sub _saveFeatures {
   }
 }
 
-
 # Print features to STDOUT
 sub _printFeatures {
   my ($feat) = @_;
@@ -109,21 +150,21 @@ sub _printFeatures {
 
 =head1 COPYRIGHT AND LICENSE
 
-Andres Breton (C)
+Andres Breton (C) 2017
 
 [LICENSE]
 
 =head1 CONTACT
 
-Please email comments or questions to Andres Breton, <dev@andresbreton.com>
+Please email comments or questions to Andres Breton, dev@andresbreton.com
 
 =head1 SETTING PATH
 
 If PERL5LIB was not set, do something like this:
 
-use FindBin; use lib "$FindBin::RealBin/lib";
+use FindBin; use lib "$FindBin::RealBin";
 
-This finds and uses subdirectory 'lib' in current directory as library location
+This finds and uses current directoy as library location
 
 =cut
 
