@@ -114,7 +114,7 @@ sub _saveFeatures {
   my $outFile   = 'features_' . $strain . '.txt'; # $file =~ /(.+\/)?(.+)\..+/;
   my $FH        = getFH('>', $outFile);
 
-  say "Saving features file '$outFile'...";
+  say "Saving features for $strain...";
   say $FH join("\t", 'strain', 'strand', @tags); # print file header
 
   for my $feat ($seqObj->get_SeqFeatures) {
@@ -139,6 +139,7 @@ sub _saveFeatures {
       print $FH "\n"; # new line for each CDS
     }
   }
+  say "Features file saved to '$outFile'";
 }
 
 # Deliver features as data structure or print to STDOUT
