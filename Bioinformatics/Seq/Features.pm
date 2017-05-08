@@ -96,7 +96,7 @@ sub lookUpFeatures {
           _deliverFeatures($feat, $task);
         } else {
           # DEFAULT - Return data structure with all features
-          push @features, _deliverFeatures($feat, $task);
+          # push @features, _deliverFeatures($feat, $task);
         }
       }
     }
@@ -111,10 +111,10 @@ sub _saveFeatures {
   my $strain    = $seqObj->display_id;
   my $seq       = $seqObj->seq;
   my $molecule  = $seqObj->molecule;
-  my $outFile   = 'features_' . $strain . '.txt';
-  # $file =~ /(.+\/)?(.+)\..+/;
-  my $FH      = getFH('>', $outFile);
+  my $outFile   = 'features_' . $strain . '.txt'; # $file =~ /(.+\/)?(.+)\..+/;
+  my $FH        = getFH('>', $outFile);
 
+  say "Saving features file '$outFile'...";
   say $FH join("\t", 'strain', 'strand', @tags); # print file header
 
   for my $feat ($seqObj->get_SeqFeatures) {
@@ -135,8 +135,7 @@ sub _saveFeatures {
         }
       }
       # Handle translation if not protein file
-      my $translation = _translate() if($molecule eq 'PRT');
-      print $FH $translation;
+      print $FH $seq->translate($seq) if($molecule eq 'PRT');
       print $FH "\n"; # new line for each CDS
     }
   }
@@ -159,11 +158,6 @@ sub _deliverFeatures {
   return ( { 'start' => $feat->start, 'end' => $feat->end,
             'strand' => $feat->strand, 'tags' => \@data }
         );
-}
-
-sub _translate {
-  my ($seq) = @_;
-  return($seq->translate($seq));
 }
 
 
