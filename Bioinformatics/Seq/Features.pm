@@ -57,11 +57,12 @@ use Bioinformatics::Seq::Features;
 
 =cut
 sub getFeatures {
-  my (@files) = @_;
+  my ($files, $task) = @_;
+  my @files = @$files;
   for my $file (@files) {
     my $inSeq   = Bio::SeqIO->new( -format => 'genbank' , -file => $file );
     my $seqObj  = $inSeq->next_seq;
-    _saveFeatures($seqObj)
+    lookUpFeatures($seqObj, $task);
   }
 }
 
@@ -71,7 +72,7 @@ sub getFeatures {
 
   Example     :
 
-  Description : Gets features provided a sequence object
+  Description : Looks up features provided a sequence object(s)
 
   Returntype  :
 
@@ -81,7 +82,8 @@ sub getFeatures {
 sub lookUpFeatures {
   my ($seqObjects, $task) = @_;
   my @seqObjects  = @$seqObjects;
-  my $numObjs = @seqObjects;
+  my $numObjs     = @seqObjects;
+  my @features;
 
   for(my $i=0; $i < $numObjs; $i++) {  # loop through seqObjects passed
 
@@ -91,10 +93,10 @@ sub lookUpFeatures {
       # Get Coding Sequence (CDS)
       if ($feat->primary_tag eq 'CDS') {
         if ($task eq 'print') {
-          _printFeatures($feat);
+          _deliverFeatures($feat, $task);
         } else {
-          # TODO:intended to return a data structure with all features
-          return;
+          # DEFAULT - Return data structure with all features
+          push @features, _deliverFeatures($feat, $task);
         }
       }
     }
@@ -140,22 +142,28 @@ sub _saveFeatures {
   }
 }
 
-# Print features to STDOUT
-sub _printFeatures {
-  my ($feat) = @_;
-  say "\nPrimary Tag: ", $feat->primary_tag, " start: ", $feat->start, " ends: ", $feat->end, " strand: ", $feat->strand;
+# Deliver features as data structure or print to STDOUT
+sub _deliverFeatures {
+  my ($feat, $task) = @_;
+  my (@data, %tags);
+
+  say "\nPrimary Tag: ", $feat->primary_tag, " start: ", $feat->start, " ends: ", $feat->end, " strand: ", $feat->strand if($task);
 
   for my $tag ($feat->get_all_tags) { # gets seqObject tags from primary feature
-    say "\ttag: $tag";
+    say "\ttag: $tag" if($task);
     for my $value ( $feat->get_tag_values($tag) ) { # gets seq object values from tag
-      say "\tvalue: $value";
+      say "\tvalue: $value" and next if($task);
+      push @data, $tags{$tag} = $value;
     }
   }
+  return ( { 'start' => $feat->start, 'end' => $feat->end,
+            'strand' => $feat->strand, 'tags' => \@data }
+        );
 }
 
 sub _translate {
   my ($seq) = @_;
-  say($seq->translate($seq));
+  return($seq->translate($seq));
 }
 
 
