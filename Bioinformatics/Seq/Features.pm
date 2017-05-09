@@ -100,7 +100,7 @@ sub lookUpFeatures {
         } elsif ($task eq 'print') {
           _deliverFeatures($feat, $task);
         } else {
-          say "Task '$task' is not supported. Use 'print' or 'save'.";
+          croak "Task '$task' is not supported. Use 'print' or 'save'.";
         }
       }
     }
