@@ -2,20 +2,21 @@ package Bioinformatics::Seq;
 
 use Exporter qw(import);
 our @ISA = qw(Exporter);
-our @EXPORT = qw(); #functions exported by default
-our @EXPORT_OK = qw(); #functions for explicit export
+our @EXPORT = qw(genbank2fasta);
+our @EXPORT_OK = qw();
 
 use strict; use warnings; use diagnostics; use feature qw(say);
 use Carp;
-
-use MyConfig;
-
 use Bio::SeqIO;
+
+# Own Modules (https://github.com/bretonics/Modules)
+use MyConfig;
 
 # ==============================================================================
 #
 #   CAPITAN:        Andres Breton
 #   FILE:           Seq.pm
+#   LICENSE:        
 #   USAGE:          Manipulate sequences
 #   DEPENDENCIES:   - BioPerl modules
 #
@@ -23,81 +24,43 @@ use Bio::SeqIO;
 
 =head1 NAME
 
-Seq -
+Seq - package for sequence manipulation
 
 =head1 SYNOPSIS
 
-Creation:
-    use Seq;
-
-
+use Bioinformatics::Seq;
 
 =head1 DESCRIPTION
 
-
+This module was designed for use in common sequence manipulation tasks.
 
 =head1 EXPORTS
 
 =head2 Default Behaviors
 
-Exports  subroutine by default
+use Bioinformatics::Seq;
 
-use Seq;
+Exports 'genbank2fasta' function by default
 
 =head2 Optional Behaviors
 
-Seq::;
+
 
 =head1 FUNCTIONS
 
 =head2 genbank2fasta
 
-   Arg [1]    :
+   Arg [1]      : Genbank file
 
-   Example    :
+   Example      : genbank2fasta($file.gb);
 
-   Description:
+   Description  : Converts Genbank file to fasta file format
 
-   Returntype :
+   Returntype   : Fasta file
 
-   Status     :
-
-=head2 sub
-
-  Arg [1]    :
-
-  Example    :
-
-  Description:
-
-  Returntype :
-
-  Status     :
-
-
-=head1 COPYRIGHT AND LICENSE
-
-Andres Breton © 2016
-
-[LICENSE]
-
-=head1 CONTACT
-
-Please email comments or questions to Andres Breton me@andresbreton.com
-
-=head1 SETTING PATH
-
-If PERL5LIB was not set, do something like this:
-
-use FindBin; use lib "$FindBin::RealBin/lib";
-
-This finds and uses subdirectory 'lib' in current directoy as library location
-
+   Status       : Stable
 =cut
-# ==============================================================================
 
-#-------------------------------------------------------------------------------
-# SUBS
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # $input = ($file.gb);
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -107,19 +70,19 @@ This finds and uses subdirectory 'lib' in current directoy as library location
 # $output = ($file.fasta);
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 sub genbank2fasta {
-    my $filledUsage = 'Usage: genbank2fasta($file.gb);';
-    @_ == 1 or croak wrongNumberArguments(), $filledUsage;
+   my $filledUsage = 'Usage: genbank2fasta($file.gb);';
+   @_ == 1 or croak wrongNumberArguments(), $filledUsage;
 
-    my ($inFile) = @_;
-    my ($outFile) = $inFile =~ /(.*).gb/;
-    $outFile = $outFile . ".fasta";
+   my ($inFile)   = @_;
+   my ($outFile)  = $inFile =~ /(.*).gb/;
+   $outFile = $outFile . ".fasta";
 
-    my $seqIn   = Bio::SeqIO->new(-file => $inFile, -format => 'genbank');
-    my $seqOut  = Bio::SeqIO->new(-file => ">$outFile", -format => 'fasta');
+   my $seqIn   = Bio::SeqIO->new( -file => $inFile, -format => 'genbank' );
+   my $seqOut  = Bio::SeqIO->new( -file => ">$outFile", -format => 'fasta' );
 
-    while (my $seq = $seqIn->next_seq) {
-        $seqOut->write_seq($seq);
-    }
+   while (my $seq = $seqIn->next_seq) {
+       $seqOut->write_seq($seq);
+   }
 }
 
 =head1 COPYRIGHT AND LICENSE
