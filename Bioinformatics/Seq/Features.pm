@@ -70,7 +70,7 @@ sub getFeatures {
 
   Arg [1]     :
 
-  Example     :
+  Example     : lookUpFeatures(\@seq);
 
   Description : Looks up features provided a sequence object(s)
 
@@ -83,7 +83,9 @@ sub lookUpFeatures {
   my ($seqObjects, $task) = @_;
   my @seqObjects  = @$seqObjects;
   my $numObjs     = @seqObjects;
-  my @features;
+  $task = 'return' unless $task; # deal with undef default value
+
+  my (@features, %data);
 
   for(my $i=0; $i < $numObjs; $i++) {  # loop through seqObjects passed
 
@@ -92,21 +94,26 @@ sub lookUpFeatures {
     for my $feat ($seqObjects[$i]->get_SeqFeatures) { # gets seqObject features
       # Get Coding Sequence (CDS)
       if ($feat->primary_tag eq 'CDS') {
-        if ($task eq 'print') {
+        if ($task eq 'return') {
+          # DEFAULT - Return data structure with all features for each CDS
+          push @features, _deliverFeatures($feat);
+        } elsif ($task eq 'print') {
           _deliverFeatures($feat, $task);
         } else {
-          # DEFAULT - Return data structure with all features
-          # push @features, _deliverFeatures($feat, $task);
+          say "Task '$task' is not supported. Use 'print' or 'save'.";
         }
       }
     }
+    $data{$seqObjects[$i]->display_id} = \@features;
   }
+  # Return HoAoH data structure of all features for all sequence objects passed
+  return \%data;
 }
 
 
 # Save features to file
 sub _saveFeatures {
-  my ($seqObj) = @_;
+  my ($seqObj)  = @_;
   my @tags      = qw(gene locus_tag inference start end product protein_id translation);
   my $strain    = $seqObj->display_id;
   my $seq       = $seqObj->seq;
