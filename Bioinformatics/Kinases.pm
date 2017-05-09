@@ -1,4 +1,4 @@
-package Kinases;
+package Bioinformatics::Kinases;
 
 use warnings; use strict; use diagnostics; use feature qw(say);
 use Carp;
@@ -20,9 +20,9 @@ Kinanses - package
 
 =head1 SYNOPSIS
 
-  use Kinanses;
+use Kinanses;
 
-  my $kinaseObj = Kinases->new($fileInName);
+my $kinaseObj = Kinases->new($fileInName);
 
 =head1 DESCRIPTION
 
@@ -277,13 +277,13 @@ sub getElementInArray {
 
 =head1 COPYRIGHT AND LICENSE
 
-Andres Breton (c) 2017
+Andres Breton (C) 2017
 
 GNU GPLv3
 
 =head1 CONTACT
 
-Please email comments or questions to Andres Breton, <dev@andresbreton.com>
+Please email comments or questions to Andres Breton, dev@andresbreton.com
 
 =head1 SETTING PATH
 
