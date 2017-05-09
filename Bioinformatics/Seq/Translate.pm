@@ -10,6 +10,7 @@ use Carp;
 
 # Own Modules (https://github.com/bretonics/Modules)
 use MyIO;
+use Bioinformatics::Seq;
 
 # =============================================================================
 #
@@ -20,12 +21,12 @@ use MyIO;
 #   DEPENDENCIES:   - Own Modules repo
 #
 # =============================================================================
-# my @temp = translate($ARGV[0], 'return abv');
-
+# my @temp = translate($ARGV[0], 'print name');
+# say @temp;
 
 =head1 NAME
 
-Translate - package for DNA sequence translation.
+Translate - package for DNA/RNA sequence translation.
 
 =head1 SYNOPSIS
 
@@ -33,7 +34,7 @@ use Bioinformatics::Seq::Translate;
 
 =head1 DESCRIPTION
 
-This module was designed to translate DNA sequences into protein. It will print or return translated sequence in multiple formats, including full amino acid names or abbreviations.
+This module was designed to translate DNA/RNA sequences into protein. It will print or return translated sequence in multiple formats, including full amino acid names or abbreviations.
 
 =head1 EXPORTS
 
@@ -47,11 +48,14 @@ use Bioinformatics::Seq::Translate;
 
   Arg [1]     :
 
+  Arg [2]     : Optional -
+
   Example     :
 
   Description : Translates DNA sequence provided a DNA
 
-  Returntype  :
+  Returntype  : Default - Print to stdout.
+                Defined - Option to return, print, or save translation sequence
 
   Status      : Stable
 
@@ -92,7 +96,7 @@ sub translate {      #Translate DNA/RNA to protein according to transTable desig
   }
 
   if ($action) {
-    return getAA(\@translation, $action);
+    return getAA(\@translation, $action); # return array of translated sequence
   } else {
    print $_ for @translation;
   }
@@ -100,13 +104,17 @@ sub translate {      #Translate DNA/RNA to protein according to transTable desig
 
 =head2 getAA
 
-  Arg [1]     :
+  Arg [1]     : Protein sequence translation in array reference
 
-  Example     :
+  Arg [2]     : Action to take: return, print, save
 
-  Description : Gets amino acids (AA) full name or abbreviation.
+  Examples    : getAA(\@translation, 'return abv');
+                getAA(\@translation, 'print name');
+                getAA(\@translation, 'save abv');
 
-  Returntype  :
+  Description : Gets amino acids' (AA) full name or abbreviation
+
+  Returntype  : Return, prints, or saves AA full name or abbrviation
 
   Status      : Stable
 
@@ -116,6 +124,11 @@ sub getAA {
   my @translation = @$translation;
   $action =~ /(.+)\s+(.+)/;
   my $task = $1; my $type = $2;
+
+  # EXPERIMENTAL
+  # unless( $type ~~ [ qw(name abv) ] ) {
+  #   croak "Your type '$type' is not supported.", $!;
+  # }
 
   my %aminos = (
     A  => { name => 'Alanine', abv => 'Ala' },
@@ -140,25 +153,13 @@ sub getAA {
     V  => { name => 'Valine', abv => 'Val' },
     '*'  => { name => 'STOP', abv => '*' },
   );
-  # Return array
+
   if ($task eq 'return') {
-    my @sequence;
-    if ($type eq 'name') {
-      return ( @sequence = map { $aminos{$_}{'name'} } @translation );
-    } elsif ($type eq 'abv') {
-      return ( @sequence = map { $aminos{$_}{'abv'} } @translation );
-    } else {
-      croak "Your type '$type' is not supported.", $!;
-    }
-  # Print to stdout
+    return ( map { $aminos{$_}{$type} } @translation ); # return array
   } elsif ($task eq 'print') {
-    if ($type eq 'name') {
-      say $aminos{$_}{'name'} for @translation;
-    } elsif ($type eq 'abv') {
-      say $aminos{$_}{'abv'} for @translation;
-    } else {
-      croak "Your type '$type' is not supported.", $!;
-    }
+    say $aminos{$_}{$type} for @translation;
+  } elsif ($task eq 'save') {
+    # $seqObj->writeFasta('translation.fasta');
   } else {
     croak "Task '$task' is not supported", $!;
   }
