@@ -116,7 +116,6 @@ sub _saveFeatures {
   my ($seqObj)  = @_;
   my @tags      = qw(gene locus_tag inference start end product protein_id translation);
   my $strain    = $seqObj->display_id;
-  my $seq       = $seqObj->seq;
   my $molecule  = $seqObj->molecule;
   my $outFile   = 'features_' . $strain . '.txt'; # $file =~ /(.+\/)?(.+)\..+/;
   my $FH        = getFH('>', $outFile);
@@ -128,8 +127,10 @@ sub _saveFeatures {
     my $primaryTag = $feat->primary_tag;
 
     if ($primaryTag eq 'CDS') {
-      my $strand = $feat->strand;
+      # my $seq     = $feat->seq->seq;
+      my $strand  = $feat->strand;
       $strand == 1 ? $strand = '+' : $strand = '-';
+
       print $FH "$strain\t$strand\t";
 
       for my $tag (@tags) {
@@ -142,7 +143,7 @@ sub _saveFeatures {
         }
       }
       # Handle translation if not protein file
-      print $FH $seq->translate($seq) if($molecule eq 'PRT');
+      # print $FH translate($seq) if($molecule eq 'DNA');
       print $FH "\n"; # new line for each CDS
     }
   }
