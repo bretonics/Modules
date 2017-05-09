@@ -1,4 +1,4 @@
-package Seq;
+package Bioinformatics::Seq;
 
 use Exporter qw(import);
 our @ISA = qw(Exporter);
@@ -114,12 +114,32 @@ sub genbank2fasta {
     my ($outFile) = $inFile =~ /(.*).gb/;
     $outFile = $outFile . ".fasta";
 
-    my $seqIn = Bio::SeqIO->new(-file => "$inFile", -format => 'genbank');
-    my $seqOut = Bio::SeqIO->new(-file => ">$outFile", -format => 'fasta');
+    my $seqIn   = Bio::SeqIO->new(-file => $inFile, -format => 'genbank');
+    my $seqOut  = Bio::SeqIO->new(-file => ">$outFile", -format => 'fasta');
 
     while (my $seq = $seqIn->next_seq) {
         $seqOut->write_seq($seq);
     }
 }
+
+=head1 COPYRIGHT AND LICENSE
+
+Andres Breton (C) 2017
+
+[LICENSE]
+
+=head1 CONTACT
+
+Please email comments or questions to Andres Breton, dev@andresbreton.com
+
+=head1 SETTING PATH
+
+If PERL5LIB was not set, do something like this:
+
+use FindBin; use lib "$FindBin::RealBin";
+
+This finds and uses current directoy as library location
+
+=cut
 
 1;
