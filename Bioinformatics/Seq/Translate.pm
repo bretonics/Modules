@@ -40,7 +40,7 @@ This module was designed to translate DNA/RNA sequences into protein. It will pr
 
 use Bioinformatics::Seq::Translate;
 
-=head1 METHODS
+=head1 FUNCTIONS
 
 =head2 translate
 
