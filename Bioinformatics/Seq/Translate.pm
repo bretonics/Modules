@@ -21,8 +21,6 @@ use Bioinformatics::Seq;
 #   DEPENDENCIES:   - Own Modules repo
 #
 # =============================================================================
-# my @temp = translate($ARGV[0], 'print name');
-# say @temp;
 
 =head1 NAME
 
@@ -46,16 +44,22 @@ use Bioinformatics::Seq::Translate;
 
 =head2 translate
 
-  Arg [1]     :
+  Arg [1]     : DNA/RNA sequence
 
-  Arg [2]     : Optional -
+  Arg [2]     : Default - No parameter passed.
 
-  Example     :
+                Optional - Action to take with translated sequence.
+                Action parameter passed determines action taken as 'task' with 'type' passed to getAA().
 
-  Description : Translates DNA sequence provided a DNA
+  Example     : translate('atggaaaagc');
+                translate('atggaaaagc', 'print');
+                NOTE: See getAA() for more options for action parameter.
 
-  Returntype  : Default - Print to stdout.
-                Defined - Option to return, print, or save translation sequence
+  Description : Translates DNA/RNA sequence provided a DNA/RNA sequence.
+
+  Returntype  : Array:
+                  Default - Returns translated sequence.
+                  Defined - Option to return, print, or save translation sequence.
 
   Status      : Stable
 
@@ -94,27 +98,28 @@ sub translate {      #Translate DNA/RNA to protein according to transTable desig
     next if( length($codon) % 3 != 0 );
     push @translation, $transTable{$codon};
   }
-
+  # Return array of translated sequence
   if ($action) {
-    return getAA(\@translation, $action); # return array of translated sequence
+    return getAA(\@translation, $action);
   } else {
-   print $_ for @translation;
+    return @translation; # default for just calling method with sequence
   }
 }
 
 =head2 getAA
 
-  Arg [1]     : Protein sequence translation in array reference
+  Arg [1]     : Protein sequence translation in array reference.
 
-  Arg [2]     : Action to take: return, print, save
+  Arg [2]     : Action to take- return, print, or save.
 
   Examples    : getAA(\@translation, 'return abv');
                 getAA(\@translation, 'print name');
+                getAA(\@translation, 'print');
                 getAA(\@translation, 'save abv');
 
-  Description : Gets amino acids' (AA) full name or abbreviation
+  Description : Gets amino acids' (AA) full name or abbreviation.
 
-  Returntype  : Return, prints, or saves AA full name or abbrviation
+  Returntype  : Returns, prints, or saves AA sequence, with optional full name or abbreviation type.
 
   Status      : Stable
 
@@ -122,7 +127,7 @@ sub translate {      #Translate DNA/RNA to protein according to transTable desig
 sub getAA {
   my ($translation, $action) = @_;
   my @translation = @$translation;
-  $action =~ /(.+)\s+(.+)/;
+  $action =~ /(\w+)[\s+]?(\w+)?/;
   my $task = $1; my $type = $2;
 
   # EXPERIMENTAL
@@ -154,15 +159,21 @@ sub getAA {
     '*'  => { name => 'STOP', abv => '*' },
   );
 
+  # Delegate action according to task and if type defined.
+  # Logic for task being defined allows for more flexibility, or in
+  # case action parameter is passed without action 'type' for 'task'
   if ($task eq 'return') {
-    return ( map { $aminos{$_}{$type} } @translation ); # return array
+    return @translation unless($type);
+    return ( map { $aminos{$_}{$type} } @translation );
   } elsif ($task eq 'print') {
+    print @translation and return unless($type);
     say $aminos{$_}{$type} for @translation;
   } elsif ($task eq 'save') {
-    # $seqObj->writeFasta('translation.fasta');
+    # $seqObj->writeFasta('translation.fasta') unless($type);
   } else {
     croak "Task '$task' is not supported", $!;
   }
+  return;
 }
 
 
