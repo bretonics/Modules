@@ -14,9 +14,9 @@ use MyConfig;
 
 # ==============================================================================
 #
-#   CAPITAN:        Andres Breton
+#   CAPITAN:        Andres Breton, http://andresbreton.com
 #   FILE:           Seq.pm
-#   LICENSE:        
+#   LICENSE:
 #   USAGE:          Manipulate sequences
 #   DEPENDENCIES:   - BioPerl modules
 #
@@ -24,7 +24,7 @@ use MyConfig;
 
 =head1 NAME
 
-Seq - package for sequence manipulation
+Seq - package for sequence manipulation.
 
 =head1 SYNOPSIS
 
@@ -40,7 +40,7 @@ This module was designed for use in common sequence manipulation tasks.
 
 use Bioinformatics::Seq;
 
-Exports 'genbank2fasta' function by default
+Exports 'genbank2fasta' function by default.
 
 =head2 Optional Behaviors
 
@@ -50,13 +50,13 @@ Exports 'genbank2fasta' function by default
 
 =head2 genbank2fasta
 
-   Arg [1]      : Genbank file
+   Arg [1]      : GenBank file
 
    Example      : genbank2fasta($file.gb);
 
-   Description  : Converts Genbank file to fasta file format
+   Description  : Converts Genbank file to fasta file format.
 
-   Returntype   : Fasta file
+   Returntype   : NULL, fasta file written.
 
    Status       : Stable
 =cut
@@ -64,7 +64,7 @@ Exports 'genbank2fasta' function by default
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # $input = ($file.gb);
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# This function takes one (1) argument, a Genbank file to be
+# This function takes one (1) argument, a GenBank file to be
 # converted into a FASTA file.
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # $output = ($file.fasta);
@@ -83,6 +83,7 @@ sub genbank2fasta {
    while (my $seq = $seqIn->next_seq) {
        $seqOut->write_seq($seq);
    }
+   return;
 }
 
 =head1 COPYRIGHT AND LICENSE

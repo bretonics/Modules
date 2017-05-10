@@ -40,6 +40,8 @@ This module was designed to translate DNA/RNA sequences into protein. It will pr
 
 use Bioinformatics::Seq::Translate;
 
+Exports 'translate' function by default.
+
 =head1 FUNCTIONS
 
 =head2 translate
@@ -119,7 +121,7 @@ sub translate {      #Translate DNA/RNA to protein according to transTable desig
 
   Description : Gets amino acids' (AA) full name or abbreviation.
 
-  Returntype  : Returns, prints, or saves AA sequence, with optional full name or abbreviation type.
+  Returntype  : Returns array, prints to STDOUT, or saves AA sequence to file, with optional full name or abbreviation type.
 
   Status      : Stable
 

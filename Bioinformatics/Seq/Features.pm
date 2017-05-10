@@ -17,7 +17,7 @@ use MyIO;
 #   CAPITAN:        Andres Breton, http://andresbreton.com
 #   FILE:           Features.pm
 #   LICENSE:
-#   USAGE:          Save/Print Genbank file features for each CDS to file/stdout
+#   USAGE:          Return, print to STDOUT, or save to file GenBank file features for each CDS
 #   DEPENDENCIES:   - BioPerl modules
 #                   - Own Modules repo
 #
@@ -25,7 +25,7 @@ use MyIO;
 
 =head1 NAME
 
-Features - package to deal with sequence file features.
+Features - package to deal with GenBank file sequence features.
 
 =head1 SYNOPSIS
 
@@ -33,7 +33,7 @@ use Bioinformatics::Seq::Features;
 
 =head1 DESCRIPTION
 
-This module was designed to save or print Genbank file features for each CDS to a file or stdout.
+This module was designed to return, print to STDOUT, or save to a file sequence features for each CDS provided a GenBank file.
 
 =head1 EXPORTS
 
@@ -45,13 +45,17 @@ use Bioinformatics::Seq::Features;
 
 =head2 getFeatures
 
-  Arg [1]     :
+  Arg [1]     : GenBank file(s)
 
-  Example     :
+  Arg [2]     : Default - No parameter passed.
 
-  Description : Gets features provided a sequence fileS
+                Optional - Task to perform by lookUpFeatures() after obtaining features: return (undef default), print to STDOUT, or save to file.
 
-  Returntype  :
+  Example     : getFeatures($file)
+
+  Description : Gets features provided a sequence files.
+
+  Returntype  : Default - Returns array of sequence features.
 
   Status      : Stable
 
@@ -68,13 +72,20 @@ sub getFeatures {
 
 =head2 lookUpFeatures
 
-  Arg [1]     :
+  Arg [1]     : Sequence object(s)
+
+  Arg [2]     : Optional - Task to perform by lookUpFeatures() after obtaining features.
+                Task 'task' will be executed: return (undef default), print to STDOUT, save to file.
 
   Example     : lookUpFeatures(\@seq);
+                lookUpFeatures(\@seq, 'print');
+                lookUpFeatures(\@seq, 'save');
 
-  Description : Looks up features provided a sequence object(s)
+  Description : Looks up all features provided a sequence object(s)
 
-  Returntype  :
+  Returntype  : Array:
+                  Default - Returns array of sequence features.
+                  Defined - Option to return (undef default), print to STDOUT, or save to file.
 
   Status      : Stable
 
@@ -110,6 +121,8 @@ sub lookUpFeatures {
   return \%data;
 }
 
+#-------------------------------------------------------------------------------
+# PRIVATE FUNCTIONS
 
 # Save features to file
 sub _saveFeatures {
