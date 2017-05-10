@@ -63,11 +63,14 @@ use Bioinformatics::Seq::Features;
 sub getFeatures {
   my ($files, $task) = @_;
   my @files = @$files;
+  my @data;
+
   for my $file (@files) {
     my $inSeq   = Bio::SeqIO->new( -format => 'genbank' , -file => $file );
     my @seqObj  = $inSeq->next_seq;
-    return lookUpFeatures(\@seqObj, $task);
+    push @data, lookUpFeatures(\@seqObj, $task);
   }
+  return \@data;
 }
 
 =head2 lookUpFeatures
