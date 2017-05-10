@@ -55,7 +55,7 @@ use Bioinformatics::Seq::Features;
 
   Description : Gets features provided a sequence files.
 
-  Returntype  : Default - Returns array of sequence features.
+  Returntype  : Default - Returns array of hashes containing sequence features.
 
   Status      : Stable
 
@@ -83,9 +83,8 @@ sub getFeatures {
 
   Description : Looks up all features provided a sequence object(s)
 
-  Returntype  : Array:
-                  Default - Returns array of sequence features.
-                  Defined - Option to return (undef default), print to STDOUT, or save to file.
+  Returntype  : Default - Returns array of hashes containing sequence features.
+                Optional - Option to return (undef default), print to STDOUT, or save to file.
 
   Status      : Stable
 

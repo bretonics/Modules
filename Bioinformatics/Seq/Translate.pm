@@ -59,9 +59,8 @@ Exports 'translate' function by default.
 
   Description : Translates DNA/RNA sequence provided a DNA/RNA sequence.
 
-  Returntype  : Array:
-                  Default - Returns translated sequence.
-                  Defined - Option to return, print, or save translation sequence.
+  Returntype  : Default - Returns translated sequence as array reference.
+                Optional - Option to return (undef default), print to STDOUT, or save to file translation sequence.
 
   Status      : Stable
 
@@ -104,7 +103,7 @@ sub translate {      #Translate DNA/RNA to protein according to transTable desig
   if ($action) {
     return getAA(\@translation, $action);
   } else {
-    return @translation; # default for just calling method with sequence
+    return \@translation; # default for just calling method with sequence
   }
 }
 
@@ -121,7 +120,7 @@ sub translate {      #Translate DNA/RNA to protein according to transTable desig
 
   Description : Gets amino acids' (AA) full name or abbreviation.
 
-  Returntype  : Returns array, prints to STDOUT, or saves AA sequence to file, with optional full name or abbreviation type.
+  Returntype  : Returns array reference, prints to STDOUT, or saves AA sequence to file, with optional full name or abbreviation type.
 
   Status      : Stable
 
@@ -165,7 +164,7 @@ sub getAA {
   # Logic for task being defined allows for more flexibility, or in
   # case action parameter is passed without action 'type' for 'task'
   if ($task eq 'return') {
-    return @translation unless($type);
+    return \@translation unless($type);
     return ( map { $aminos{$_}{$type} } @translation );
   } elsif ($task eq 'print') {
     print @translation and return unless($type);
