@@ -45,7 +45,7 @@ use Bioinformatics::Seq::Features;
 
 =head2 getFeatures
 
-  Arg [1]     : GenBank file(s)
+  Arg [1]     : GenBank file(s) as array reference
 
   Arg [2]     : Default - No parameter passed.
 
@@ -65,14 +65,14 @@ sub getFeatures {
   my @files = @$files;
   for my $file (@files) {
     my $inSeq   = Bio::SeqIO->new( -format => 'genbank' , -file => $file );
-    my $seqObj  = $inSeq->next_seq;
-    lookUpFeatures($seqObj, $task);
+    my @seqObj  = $inSeq->next_seq;
+    return lookUpFeatures(\@seqObj, $task);
   }
 }
 
 =head2 lookUpFeatures
 
-  Arg [1]     : Sequence object(s)
+  Arg [1]     : Sequence object(s) as array reference
 
   Arg [2]     : Optional - Task to perform by lookUpFeatures() after obtaining features.
                 Task 'task' will be executed: return (undef default), print to STDOUT, save to file.
